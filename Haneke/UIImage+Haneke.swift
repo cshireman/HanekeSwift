@@ -40,11 +40,11 @@ extension UIImage {
         let alphaInfo = CGImageGetAlphaInfo(originalImageRef)
         
         // See: http://stackoverflow.com/questions/23723564/which-cgimagealphainfo-should-we-use
-        var bitmapInfo = originalBitmapInfo
+        var bitmapInfo = originalBitmapInfo.rawValue
         switch (alphaInfo) {
         case .None:
-            bitmapInfo &= ~CGBitmapInfo.AlphaInfoMask
-            bitmapInfo |= CGBitmapInfo(CGImageAlphaInfo.NoneSkipFirst.rawValue)
+            bitmapInfo &= UInt32(CGBitmapInfo.AlphaInfoMask.rawValue)
+            bitmapInfo |= CGImageAlphaInfo.NoneSkipFirst.rawValue
         case .PremultipliedFirst, .PremultipliedLast, .NoneSkipFirst, .NoneSkipLast:
             break
         case .Only, .Last, .First: // Unsupported
@@ -68,7 +68,7 @@ extension UIImage {
             let decompressedImageRef = CGBitmapContextCreateImage(context)
             
             let scale = UIScreen.mainScreen().scale
-            let image = UIImage(CGImage: decompressedImageRef, scale:scale, orientation:UIImageOrientation.Up)
+            let image = UIImage(CGImage: decompressedImageRef!, scale:scale, orientation:UIImageOrientation.Up)
             
             return image
             
